@@ -28,12 +28,6 @@ const Dashboard = () => {
           >
             Profile
           </Link>
-          <Link
-            to="/settings"
-            className="block py-2 px-3 rounded hover:bg-gray-700"
-          >
-            Settings
-          </Link>
           <Link onClick={()=>logout()}  class="block py-2 px-3 rounded hover:bg-gray-700">
           Logout
           </Link>
