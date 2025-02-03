@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
   // ========================= LOGIN =========================
   const login = (email, password) => {
     toast.loading("Logging you in ... ");
-    fetch("http://127.0.0.1:5000/login", {
+    fetch("https://freelance-phase-4-projo.onrender.com/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +33,7 @@ export const UserProvider = ({ children }) => {
           setAuthToken(response.access_token);
 
           // Fetch current user data
-          fetch("http://127.0.0.1:5000/current_user", {
+          fetch("https://freelance-phase-4-projo.onrender.com/current_user", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export const UserProvider = ({ children }) => {
 {
 
     toast.loading("Logging out...");
-    fetch("http://127.0.0.1:5000/logout", {
+    fetch("https://freelance-phase-4-projo.onrender.com/logout", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -111,7 +111,7 @@ export const UserProvider = ({ children }) => {
     {
         console.log("Current user fcn ",authToken);
         
-        fetch('http://127.0.0.1:5000/current_user',{
+        fetch('https://freelance-phase-4-projo.onrender.com/current_user',{
             method:"GET",
             headers: {
                 'Content-type': 'application/json',
@@ -131,7 +131,7 @@ export const UserProvider = ({ children }) => {
   const addUser = (username, email, password) => 
   {
     toast.loading("Registering ... ");
-    fetch("http://127.0.0.1:5000/users", {
+    fetch("https://freelance-phase-4-projo.onrender.com/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password }),
@@ -167,7 +167,7 @@ export const UserProvider = ({ children }) => {
     }
 
     toast.loading("Deleting account...");
-    fetch(`http://127.0.0.1:5000/users/${userId}`, {
+    fetch(`https://freelance-phase-4-projo.onrender.com/users/${userId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
