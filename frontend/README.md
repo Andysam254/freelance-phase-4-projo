@@ -31,7 +31,8 @@ Ensure you have the following installed on your system:
 
 ## Live Demo & Video Walkthrough
 - **Live Link**: (https://freence-hub.vercel.app/)
-- **Demo Video**: https://www.loom.com/share/e11e05a88e05471dbb9df1bd1ea812e7?sid=aff980e6-cde0-4e0d-8249-8dbbec1fc27c
+- **Demo Video**: [\[Insert video link here\]](https://www.loom.com/share/e11e05a88e05471dbb9df1bd1ea812e7?sid=957028f0-65b7-4361-8d5a-b4e9dee69bf4)
+
 ## Future Improvements
 - Implement a review and rating system for freelancers.
 - Add messaging functionality between clients and freelancers.
