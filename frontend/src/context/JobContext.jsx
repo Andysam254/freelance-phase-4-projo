@@ -16,7 +16,7 @@ export const JobProvider = ({ children }) => {
 
   // ================================ FETCH JOBS =====================================
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/job/all", {
+    fetch("https://freelance-phase-4-projo.onrender.com/job/all", {
       method: "GET",
       headers: {
         "Content-type": "application/json",
@@ -32,7 +32,7 @@ export const JobProvider = ({ children }) => {
   // ================================ FETCH APPLICATIONS ====================================
   useEffect(() => {
     if (authToken) {
-      fetch("http://127.0.0.1:5000/applications", {
+      fetch("https://freelance-phase-4-projo.onrender.com/applications", {
         method: "GET",
         headers: {
           "Content-type": "application/json",
@@ -55,7 +55,7 @@ export const JobProvider = ({ children }) => {
     }
 
     toast.loading("Submitting application...");
-    fetch("http://127.0.0.1:5000/jobs/add", {
+    fetch("https://freelance-phase-4-projo.onrender.com/jobs/add", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -83,7 +83,7 @@ export const JobProvider = ({ children }) => {
     }
 
     toast.loading("Deleting job...");
-    fetch(`http://127.0.0.1:5000/jobs${jobId}`, {
+    fetch(`https://freelance-phase-4-projo.onrender.com/jobs${jobId}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
