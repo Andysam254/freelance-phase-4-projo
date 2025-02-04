@@ -30,7 +30,7 @@ Ensure you have the following installed on your system:
 - **Admins**: Oversee platform activities, approve/reject job applications, and manage users.
 
 ## Live Demo & Video Walkthrough
-- **Live Link**: (https://freence-hub.vercel.app/)
+- **Live Link**: https://freelancehub-rose.vercel.app/
 - **Demo Video**: [Insert video link here]
 
 ## Future Improvements
