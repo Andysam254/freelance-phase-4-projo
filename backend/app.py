@@ -8,7 +8,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///freelance_job_board.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://freelance_board_db_user:ixmGs6833Uto6zckJaDekxGJpEfwd73N@dpg-cugnbrqj1k6c73avps4g-a.oregon-postgres.render.com/freelance_board_db'
 db.init_app(app)
 migrate = Migrate(app, db)
 
