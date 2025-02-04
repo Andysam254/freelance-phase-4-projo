@@ -4,31 +4,37 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function AddJob() {
   const [title, setTitle] = useState("");
-  const [category_id, setCategoryId] = useState("");
+  const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [jobs, setJobs] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [budget, setBudget] = useState("");
+  const [skills_required, setSkillsRequired] = useState("");
+  const [jobs, setJobs] = useState([]); // Initialize jobs state
+  const [editingIndex, setEditingIndex] = useState(null); // Track the job being edited
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (editingIndex !== null) {
-      // Updating existing job
+      // Update existing job
       const updatedJobs = [...jobs];
-      updatedJobs[editingIndex] = { title, description, deadline, category_id };
+      updatedJobs[editingIndex] = { title, category, description, deadline, budget, skills_required };
       setJobs(updatedJobs);
       setEditingIndex(null);
       toast.success("Job updated successfully!");
     } else {
-      // Adding a new job
-      setJobs([...jobs, { title, description, deadline, category_id }]);
+      // Add a new job
+      setJobs([...jobs, { title, category, description, deadline, budget, skills_required }]);
       toast.success("Job posted successfully!");
     }
+
     // Clear form fields
     setTitle("");
-    setCategoryId("");
+    setCategory("");
     setDescription("");
     setDeadline("");
+    setBudget("");
+    setSkillsRequired("");
   };
 
   const handleDelete = (index) => {
@@ -40,10 +46,12 @@ export default function AddJob() {
   const handleEdit = (index) => {
     const job = jobs[index];
     setTitle(job.title);
-    setCategoryId(job.category_id);
+    setCategory(job.category);
     setDescription(job.description);
     setDeadline(job.deadline);
-    setEditingIndex(index);
+    setBudget(job.budget);
+    setSkillsRequired(job.skills_required);
+    setEditingIndex(index); // Track the editing index
   };
 
   return (
@@ -69,17 +77,17 @@ export default function AddJob() {
         <div>
           <label className="block text-sm font-medium text-gray-700">Job Category</label>
           <select
-            value={category_id}
-            onChange={(e) => setCategoryId(e.target.value)}
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             className="mt-2 w-full px-4 py-2 border rounded-md focus:ring-indigo-500"
             required
           >
             <option value="">Select Category</option>
-            <option value="1">Development</option>
-            <option value="2">Design</option>
-            <option value="3">Marketing</option>
-            <option value="4">Writing</option>
-            <option value="5">Consulting</option>
+            <option value="Development">Development</option>
+            <option value="Design">Design</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Writing">Writing</option>
+            <option value="Consulting">Consulting</option>
           </select>
         </div>
         <div>
@@ -98,6 +106,26 @@ export default function AddJob() {
             type="date"
             value={deadline}
             onChange={(e) => setDeadline(e.target.value)}
+            className="mt-2 w-full px-4 py-2 border rounded-md focus:ring-indigo-500"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Budget</label>
+          <input
+            type="number"
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
+            className="mt-2 w-full px-4 py-2 border rounded-md focus:ring-indigo-500"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Skills Required</label>
+          <input
+            type="text"
+            value={skills_required}
+            onChange={(e) => setSkillsRequired(e.target.value)}
             className="mt-2 w-full px-4 py-2 border rounded-md focus:ring-indigo-500"
             required
           />
@@ -124,6 +152,8 @@ export default function AddJob() {
                 <h4 className="text-xl font-bold">{job.title}</h4>
                 <p className="text-gray-700">{job.description}</p>
                 <p className="text-gray-500">Deadline: {job.deadline}</p>
+                <p className="text-gray-500">Budget: ${job.budget}</p>
+                <p className="text-gray-500">Skills Required: {job.skills_required}</p>
                 <div className="flex gap-4 mt-4">
                   <button
                     onClick={() => handleEdit(index)}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import JobCard from '../components/JobCard'; // Import the JobCard component
+import JobCard from '../components/Jobcard'; // Import the JobCard component
 import { Link } from 'react-router-dom';
 
 const BrowseJobs = () => {

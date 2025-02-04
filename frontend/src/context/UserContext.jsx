@@ -1,4 +1,3 @@
-// UserContext.jsx
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -6,200 +5,195 @@ import { useNavigate } from "react-router-dom";
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const navigate = useNavigate();
-  const [authToken, setAuthToken] = useState(() => localStorage.getItem("token"));
-  const [currentUser, setCurrentUser] = useState(null);
+    const navigate = useNavigate();
+    const [authToken, setAuthToken] = useState(() => sessionStorage.getItem("token"));
+    const [current_user, setCurrentUser] = useState(null);
 
-  console.log("Current user:", currentUser);
+    console.log("Current user:", current_user);
 
-  // ========================= LOGIN =========================
-  const login = (email, password) => {
-    toast.loading("Logging you in ... ");
-    fetch("https://freelance-phase-4-projo.onrender.com/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    })
-      .then((resp) => resp.json())
-      .then((response) => {
-        if (response.access_token) {
-          toast.dismiss();
-
-          sessionStorage.setItem("token", response.access_token);
-
-          localStorage.setItem("token", response.access_token);
-          setAuthToken(response.access_token);
-
-          // Fetch current user data
-          fetch("https://freelance-phase-4-projo.onrender.com/current_user", {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${response.access_token}`,
-            },
-            //credentials: "include",
-          })
-          .then((response) => response.json())
-          .then((response) => {
-            if(response.email){
-                    setCurrentUser(response)
-                  }
-          });
-
-          toast.success("Successfully Logged in");
-          navigate("/")
-
-        } 
-        else if (response.error) {
-          toast.dismiss();
-          toast.error(response.error)
-
-        } 
-        else {
-          toast.dismiss();
-          toast.error("Failed to login");
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error("Login error: " + error.message);
-      });
-  };
-
-  // ========================= LOGOUT =========================
-  const logout = () =>
-{
-
-    toast.loading("Logging out...");
-    fetch("https://freelance-phase-4-projo.onrender.com/logout", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`
-      },
-
-    })
-    .then((resp)=>resp.json())
-    .then((response)=>{
-       console.log(response);
-       
-        if(response.success)
-        {
-            sessionStorage.removeItem("token");
-            setAuthToken(null)
-            setCurrentUser(null)
-
-            toast.dismiss()
-            toast.success("Successfully Logged out")
-
-            navigate("/login")
-        }
-    })
-      .catch(() => {
-        toast.dismiss();
-        toast.error("Logout failed. Try again.");
-      });
-  };
-
-  // ========================= FETCH CURRENT USER =========================
-    useEffect(()=>{
-        fetchCurrentUser()
-    }, [])
-    const fetchCurrentUser = () => 
-    {
-        console.log("Current user fcn ",authToken);
-        
-        fetch('https://freelance-phase-4-projo.onrender.com/current_user',{
-            method:"GET",
+    // LOGIN
+    const login = (email, password) => {
+        toast.loading("Logging you in ... ");
+        fetch("http://127.0.0.1:5000/login", {
+            method: "POST",
             headers: {
                 'Content-type': 'application/json',
-                Authorization: `Bearer ${authToken}`
-            }
+            },
+            body: JSON.stringify({ email, password }),
         })
-        .then((response) => response.json())
+        .then((resp) => resp.json())
         .then((response) => {
-          if(response.email){
-          setCurrentUser(response)
-          }
+            if (response.access_token) {
+                toast.dismiss();
+                sessionStorage.setItem("token", response.access_token);
+                setAuthToken(response.access_token);
+
+                fetch(`http://127.0.0.1:5000/current_user`, {
+                    method: "GET",
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Bearer ${response.access_token}`,
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.email) {
+                        setCurrentUser(data);
+                    }
+                });
+
+                toast.success("Successfully Logged in");
+                navigate("/");
+            } else {
+                toast.dismiss();
+                toast.error(response.error || "Either email/password is incorrect");
+            }
         });
     };
 
+    // LOGOUT
+    const logout = () => {
+        toast.loading("Logging out ... ");
+        fetch("http://127.0.0.1:5000/logout", {
+            method: "DELETE",
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+            },
+        })
+        .then((resp) => resp.json())
+        .then((response) => {
+            if (response.success) {
+                sessionStorage.removeItem("token");
+                setAuthToken(null);
+                setCurrentUser(null);
+                toast.dismiss();
+                toast.success("Successfully Logged out");
+                navigate("/login");
+            }
+        });
+    };
 
-  // ========================= REGISTER USER =========================
-  const addUser = (username, email, password) => 
-  {
-    toast.loading("Registering ... ");
-    fetch("https://freelance-phase-4-projo.onrender.com/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password }),
-    })
-      .then((resp) => {
-        if (!resp.ok) {
-          throw new Error("Network response was not ok");
+    // Fetch current user
+    useEffect(() => {
+        if (authToken) {
+            fetchCurrentUser();
         }
-        return resp.json();
-      })
-      .then((response) => {
-        console.log(response);
-        toast.dismiss();
-        if (response.success) {
-          toast.success("Registration successful!");
-          navigate("/login");
-        } else {
-          toast.error(response.error || "Registration failed.");
-        }
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-        toast.dismiss();
-        toast.error("Server error. Try again.");
-      });
-  };
+    }, [authToken]);
 
-  // ========================= DELETE ACCOUNT =========================
-  const deleteUser = (userId) => {
-    if (!authToken) {
-      toast.error("Unauthorized action.");
-      return;
-    }
+    const fetchCurrentUser = () => {
+        console.log("Fetching current user with token:", authToken);
+        fetch("http://127.0.0.1:5000/current_user", {
+            method: "GET",
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data.email) {
+                setCurrentUser(data);
+            }
+        });
+    };
 
-    toast.loading("Deleting account...");
-    fetch(`https://freelance-phase-4-projo.onrender.com/users/${userId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      credentials: "include",
-    })
-      .then((resp) => resp.json())
-      .then((response) => {
-        toast.dismiss();
-        if (response.success) {
-          toast.success("Account deleted successfully.");
-          logout();
-        } else {
-          toast.error(response.error || "Failed to delete account.");
-        }
-      })
-      .catch(() => {
-        toast.dismiss();
-        toast.error("Something went wrong.");
-      });
-  };
+    // Add User
+    const addUser = (username, email, password) => 
+      {
+          toast.loading("Registering ... ")
+          fetch("http://127.0.0.1:5000/users",{
+              method:"POST",
+              headers: {
+                  'Content-type': 'application/json',
+                },
+              body: JSON.stringify({
+                  username, email, password
+              })
+          })
+          .then((resp)=>resp.json())
+          .then((response)=>{
+              console.log(response);
+              
+              if(response.success){
+                  toast.dismiss()
+                  toast.success(response.success)
+                  navigate("/login")
+              }
+              else if(response.error){
+                  toast.dismiss()
+                  toast.error(response.error)
+  
+              }
+              else{
+                  toast.dismiss()
+                  toast.error("Failed to register")
+  
+              }
+            
+              
+          })
+  
+          
+      };
+    // Update User
+    const updateUser = (user_id, updatedData) => {
+        toast.loading("Updating user...");
 
-  // ========================= PROVIDER DATA =========================
-  const data = {
-    authToken,
-    login,
-    logout,
-    addUser,
-    currentUser,
-    deleteUser,
-  };
+        fetch(`http://127.0.0.1:5000/users/${user_id}`, {
+            method: "PATCH",
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+            },
+            body: JSON.stringify(updatedData),
+        })
+        .then((resp) => resp.json())
+        .then((response) => {
+            toast.dismiss();
+            if (response.success) {
+                setCurrentUser(response.updatedUser);
+                toast.success("User updated successfully!");
+            } else {
+                toast.error(response.error || "Failed to update user.");
+            }
+        })
+        .catch((error) => {
+            toast.dismiss();
+            toast.error("An error occurred: " + error.message);
+        });
+    };
 
-  return <UserContext.Provider value={data}>{children}</UserContext.Provider>;
+    // Delete User
+    const deleteUser = async (user_id) => {
+        toast.loading("Deleting user...");
+        fetch(`http://127.0.0.1:5000/users/${user_id}`, {
+            method: "DELETE",
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+            },
+        })
+        .then((resp) => resp.json())
+        .then((response) => {
+            toast.dismiss();
+            if (response.success) {
+                setCurrentUser(null);
+                toast.success("User deleted successfully!");
+                navigate("/login");
+            } else {
+                toast.error(response.error || "Failed to delete user.");
+            }
+        })
+        .catch((error) => {
+            toast.dismiss();
+            toast.error("An error occurred: " + error.message);
+        });
+    };
+
+    return (
+        <UserContext.Provider value={{ authToken, login, logout, current_user, addUser, updateUser, deleteUser }}>
+            {children}
+        </UserContext.Provider>
+    );
 };

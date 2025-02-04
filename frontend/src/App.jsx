@@ -8,11 +8,9 @@ import NoPage from "./pages/NoPage";
 import Jobdetails from './pages/Jobdetail';
 import Profile from './pages/Profile';
 import BrowseJobs from './pages/BrowseJobs';
-import Dashboard from './pages/Dashboard';
 import FindFreelancers from './pages/Findfreelancers';
 import PostJobs from './pages/PostJobs';
-import JobCard from './components/JobCard';
-import Chat from './components/Chat';
+import JobCard from './components/Jobcard';
 import { UserProvider } from './context/UserContext';
 import { JobProvider } from './context/JobContext';
 import Register from './pages/Register';
@@ -29,13 +27,11 @@ function App() {
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
               <Route path="browsejobs" element={<BrowseJobs />} />
-              <Route path="dashboard" element={<Dashboard />} />
               <Route path="profile" element={<Profile />} />
               <Route path="postjobs" element={<PostJobs />} />
               <Route path="jobdetails" element={<Jobdetails />} />
               <Route path="findfreelancers" element={<FindFreelancers />} />
               <Route path="jobcard" element={<JobCard />} />
-              <Route path="chat" element={<Chat />} />
               <Route path="*" element={<NoPage />} />
             </Route>
           </Routes>

@@ -16,27 +16,27 @@ export const JobProvider = ({ children }) => {
 
   // ================================ FETCH JOBS =====================================
   useEffect(() => {
-    fetch("https://freelance-phase-4-projo.onrender.com/api/jobs", {
+    fetch("http://127.0.0.1:5000/job/all", {
       method: "GET",
       headers: {
         "Content-type": "application/json",
+        "Authorization": `Bearer ${authToken}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
         setJobs(data);
       })
-      .catch((error) => console.error("Error fetching jobs:", error));
-  }, [onChange]);
+  }, []);
 
   // ================================ FETCH APPLICATIONS ====================================
   useEffect(() => {
     if (authToken) {
-      fetch("https://freelance-phase-4-projo.onrender.com/api/applications", {
+      fetch("http://127.0.0.1:5000/applications", {
         method: "GET",
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${authToken}`,
+          "Authorization": `Bearer ${authToken}`,
         },
       })
         .then((response) => response.json())
@@ -45,23 +45,23 @@ export const JobProvider = ({ children }) => {
         })
         .catch((error) => console.error("Error fetching applications:", error));
     }
-  }, [onChange, authToken]);
+  }, []);
 
   // ================================ APPLY FOR JOB ====================================
-  const applyForJob = (jobId, coverLetter, resume) => {
+  const applyForJob = (title , description , skills_required , budget  ,deadline , category) => {
     if (!authToken) {
       toast.error("Please log in to apply for jobs.");
       return;
     }
 
     toast.loading("Submitting application...");
-    fetch("https://freelance-phase-4-projo.onrender.com/api/applications/apply", {
+    fetch("http://127.0.0.1:5000/jobs/add", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        "Authorization": `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ job_id: jobId, cover_letter: coverLetter, resume }),
+      body: JSON.stringify({ title , description , skills_required , budget  ,deadline , category }),
     })
       .then((resp) => resp.json())
       .then((response) => {
@@ -73,7 +73,6 @@ export const JobProvider = ({ children }) => {
           toast.error(response.error || "Failed to apply.");
         }
       })
-      .catch(() => toast.error("Something went wrong!"));
   };
 
   // ================================ DELETE JOB (Admin Only) ====================================
@@ -84,11 +83,11 @@ export const JobProvider = ({ children }) => {
     }
 
     toast.loading("Deleting job...");
-    fetch(`https://freelance-phase-4-projo.onrender.com/api/jobs/${jobId}`, {
+    fetch(`http://127.0.0.1:5000/jobs${jobId}`, {
       method: "DELETE",
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        "Authorization": `Bearer ${authToken}`,
       },
     })
       .then((resp) => resp.json())
@@ -102,7 +101,6 @@ export const JobProvider = ({ children }) => {
           toast.error(response.error || "Failed to delete job.");
         }
       })
-      .catch(() => toast.error("Something went wrong!"));
   };
 
   return (

@@ -83,16 +83,7 @@ def add_user():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({
-        "success": "User account created successfully!",
-        "user": {
-            "id": new_user.id,
-            "username": new_user.username,
-            "email": new_user.email,
-            "role": new_user.role,
-            "is_admin": new_user.is_admin
-        }
-    }), 201
+    return jsonify({"success": "User account created successfully!",}), 201
 
 # -------------------------------
 # Update User
