@@ -31,7 +31,7 @@ Ensure you have the following installed on your system:
 
 ## Live Demo & Video Walkthrough
 - **Live Link**: https://freelancehub-rose.vercel.app/
-- **Demo Video**: [Insert video link here]
+- **Demo Video**: https://www.loom.com/share/e11e05a88e05471dbb9df1bd1ea812e7?sid=4dbadf10-500f-434b-9536-2ea6474cff94
 
 ## Future Improvements
 - Implement a review and rating system for freelancers.
